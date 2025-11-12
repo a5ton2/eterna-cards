@@ -503,24 +503,24 @@ export default function ImportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#1a1a1a] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Navigation Header */}
         <div className="mb-8 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-gray-100 mb-2">
               Purchase Order Import
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-300">
               Upload invoice files and group them before AI analysis
             </p>
-            <p className="text-sm text-blue-600 font-medium mt-2">
+            <p className="text-sm text-[#ff6b35] font-medium mt-2">
               💡 Tip: Drag files between groups to merge multiple pages into one purchase order
             </p>
           </div>
           <button
             onClick={navigateToView}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#ff6b35] hover:bg-[#ff8c42] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff6b35] transition-colors"
           >
             <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -530,10 +530,10 @@ export default function ImportPage() {
         </div>
 
         {/* Upload Form */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="bg-[#2a2a2a] rounded-lg shadow-md p-6 mb-6 border border-[#3a3a3a]">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-gray-200 mb-3">
                 Upload Invoice Files (PNG, JPG, or PDF)
               </label>
 
@@ -544,8 +544,8 @@ export default function ImportPage() {
                 onDrop={handleDrop}
                 className={`relative border-2 border-dashed rounded-lg transition-all ${
                   isDragging
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-300 bg-gray-50 hover:border-gray-400'
+                    ? 'border-[#ff6b35] bg-[#3a3a3a]'
+                    : 'border-[#3a3a3a] bg-[#1a1a1a] hover:border-[#4a4a4a]'
                 } ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 <input
@@ -560,7 +560,7 @@ export default function ImportPage() {
 
                 <div className="py-12 px-6 text-center">
                   <svg
-                    className={`mx-auto h-16 w-16 ${isDragging ? 'text-blue-500' : 'text-gray-400'}`}
+                    className={`mx-auto h-16 w-16 ${isDragging ? 'text-[#ff6b35]' : 'text-gray-500'}`}
                     stroke="currentColor"
                     fill="none"
                     viewBox="0 0 48 48"
@@ -573,13 +573,13 @@ export default function ImportPage() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <div className="mt-4 flex text-sm leading-6 text-gray-600 justify-center">
-                    <span className="font-semibold text-blue-600 hover:text-blue-500">
+                  <div className="mt-4 flex text-sm leading-6 text-gray-300 justify-center">
+                    <span className="font-semibold text-[#ff6b35] hover:text-[#ff8c42]">
                       Click to upload
                     </span>
                     <span className="pl-1">or drag and drop</span>
                   </div>
-                  <p className="text-xs leading-5 text-gray-600 mt-2">
+                  <p className="text-xs leading-5 text-gray-400 mt-2">
                     PNG, JPG, or PDF files
                   </p>
                 </div>
@@ -590,14 +590,14 @@ export default function ImportPage() {
             {fileGroups.length > 0 && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-gray-900">
+                  <h3 className="text-sm font-medium text-gray-100">
                     File Groups ({fileGroups.length})
                   </h3>
                   {!loading && (
                     <button
                       type="button"
                       onClick={() => setFileGroups([])}
-                      className="text-sm text-red-600 hover:text-red-800 font-medium"
+                      className="text-sm text-[#ff6b35] hover:text-[#ff8c42] font-medium"
                     >
                       Clear All
                     </button>
@@ -619,14 +619,14 @@ export default function ImportPage() {
                       onDrop={(e) => handleGroupDrop(e, group.id)}
                       className={`border-2 rounded-lg p-4 transition-all relative ${
                         dragOverGroup === group.id
-                          ? 'border-blue-500 bg-blue-50'
+                          ? 'border-[#ff6b35] bg-[#3a3a3a]'
                           : isExtracted
-                          ? 'border-green-300 bg-green-50'
+                          ? 'border-green-500 bg-[#2a3a2a]'
                           : hasError
-                          ? 'border-red-300 bg-red-50'
+                          ? 'border-red-500 bg-[#3a2a2a]'
                           : isProcessing
-                          ? 'border-blue-300 bg-blue-50'
-                          : 'border-gray-200 bg-white'
+                          ? 'border-[#ff8c42] bg-[#3a3a3a]'
+                          : 'border-[#3a3a3a] bg-[#2a2a2a]'
                       }`}
                     >
                       {/* Status Badge */}
@@ -651,17 +651,17 @@ export default function ImportPage() {
                           value={group.name}
                           onChange={(e) => handleRenameGroup(group.id, e.target.value)}
                           disabled={loading}
-                          className="w-full text-sm font-medium text-gray-900 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:outline-none px-1 py-1"
+                          className="w-full text-sm font-medium text-gray-100 bg-transparent border-b border-transparent hover:border-[#3a3a3a] focus:border-[#ff6b35] focus:outline-none px-1 py-1"
                         />
                         <div className="flex items-center justify-between mt-1">
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-400">
                             {group.files.length} file{group.files.length !== 1 ? 's' : ''}
                           </p>
                           <button
                             type="button"
                             onClick={() => handleAnalyzeGroup(group.id)}
                             disabled={loading || groupResults.some(r => r.group.id === group.id && (r.status === 'processing' || r.status === 'extracted' || r.status === 'success'))}
-                            className="text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="text-xs px-2 py-1 bg-[#ff6b35] text-white rounded hover:bg-[#ff8c42] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                           >
                             {groupResults.find(r => r.group.id === group.id)?.status === 'processing' ? 'Analyzing...' : 'Analyze'}
                           </button>
@@ -675,21 +675,21 @@ export default function ImportPage() {
                             key={fileIndex}
                             draggable={!loading}
                             onDragStart={() => handleFileDragStart(group.id, fileIndex)}
-                            className={`flex items-center justify-between p-2 bg-gray-50 rounded border border-gray-200 ${
-                              !loading ? 'cursor-move hover:bg-gray-100' : ''
+                            className={`flex items-center justify-between p-2 bg-[#1a1a1a] rounded border border-[#3a3a3a] ${
+                              !loading ? 'cursor-move hover:bg-[#2a2a2a]' : ''
                             }`}
                           >
                             <div className="flex items-center gap-2 min-w-0 flex-1">
-                              <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                               </svg>
-                              <span className="text-xs text-gray-700 truncate">{file.name}</span>
+                              <span className="text-xs text-gray-300 truncate">{file.name}</span>
                             </div>
                             {!loading && (
                               <button
                                 type="button"
                                 onClick={() => handleRemoveFile(group.id, fileIndex)}
-                                className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50 transition-colors flex-shrink-0"
+                                className="text-[#ff6b35] hover:text-[#ff8c42] p-1 rounded hover:bg-[#3a3a3a] transition-colors flex-shrink-0"
                               >
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -710,7 +710,7 @@ export default function ImportPage() {
             <button
               type="submit"
               disabled={fileGroups.length === 0 || loading}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full bg-[#ff6b35] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#ff8c42] focus:outline-none focus:ring-2 focus:ring-[#ff6b35] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? (
                 <span className="flex items-center justify-center">
@@ -813,10 +813,10 @@ export default function ImportPage() {
               }
               
               return (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6">
+              <div key={index} className="bg-[#2a2a2a] rounded-lg shadow-md p-6 border border-[#3a3a3a]">
                 <div className="flex items-center gap-2 mb-4">
                   {result.status === 'processing' && (
-                    <svg className="animate-spin h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin h-5 w-5 text-[#ff6b35]" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
@@ -831,14 +831,14 @@ export default function ImportPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   )}
-                  <h3 className="text-lg font-semibold text-gray-900">{result.group.name}</h3>
-                  <span className="text-sm text-gray-500">
+                  <h3 className="text-lg font-semibold text-gray-100">{result.group.name}</h3>
+                  <span className="text-sm text-gray-400">
                     ({result.group.files.length} file{result.group.files.length !== 1 ? 's' : ''})
                   </span>
                 </div>
 
                 {result.status === 'processing' && (
-                  <p className="text-sm text-gray-600">Analyzing files...</p>
+                  <p className="text-sm text-gray-300">Analyzing files...</p>
                 )}
 
                 {result.status === 'error' && (
@@ -894,51 +894,51 @@ export default function ImportPage() {
 
                     {/* Supplier Information */}
                     <div>
-                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Supplier Information</h4>
+                      <h4 className="text-sm font-semibold text-gray-100 mb-3">Supplier Information</h4>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Supplier Name *</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Supplier Name *</label>
                           <input
                             type="text"
                             value={getEditableData(index)?.supplier.name || ''}
                             onChange={(e) => updateField(index, 'supplier.name', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Email</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Email</label>
                           <input
                             type="email"
                             value={getEditableData(index)?.supplier.email || ''}
                             onChange={(e) => updateField(index, 'supplier.email', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Phone</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Phone</label>
                           <input
                             type="text"
                             value={getEditableData(index)?.supplier.phone || ''}
                             onChange={(e) => updateField(index, 'supplier.phone', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">VAT Number</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">VAT Number</label>
                           <input
                             type="text"
                             value={getEditableData(index)?.supplier.vatNumber || ''}
                             onChange={(e) => updateField(index, 'supplier.vatNumber', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                         <div className="col-span-2">
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Address</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Address</label>
                           <textarea
                             value={getEditableData(index)?.supplier.address || ''}
                             onChange={(e) => updateField(index, 'supplier.address', e.target.value)}
                             rows={2}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                       </div>
@@ -946,42 +946,42 @@ export default function ImportPage() {
 
                     {/* Purchase Order Information */}
                     <div>
-                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Purchase Order Details</h4>
+                      <h4 className="text-sm font-semibold text-gray-100 mb-3">Purchase Order Details</h4>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Invoice Number</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Invoice Number</label>
                           <input
                             type="text"
                             value={getEditableData(index)?.purchaseOrder.invoiceNumber || ''}
                             onChange={(e) => updateField(index, 'purchaseOrder.invoiceNumber', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Invoice Date</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Invoice Date</label>
                           <input
                             type="date"
                             value={getEditableData(index)?.purchaseOrder.invoiceDate || ''}
                             onChange={(e) => updateField(index, 'purchaseOrder.invoiceDate', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Currency</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Currency</label>
                           <input
                             type="text"
                             value={getEditableData(index)?.purchaseOrder.originalCurrency || ''}
                             onChange={(e) => updateField(index, 'purchaseOrder.originalCurrency', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Payment Terms</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Payment Terms</label>
                           <input
                             type="text"
                             value={getEditableData(index)?.purchaseOrder.paymentTerms || ''}
                             onChange={(e) => updateField(index, 'purchaseOrder.paymentTerms', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                       </div>
@@ -990,11 +990,11 @@ export default function ImportPage() {
                     {/* Line Items Table */}
                     <div>
                       <div className="flex items-center justify-between mb-3">
-                        <h4 className="text-sm font-semibold text-gray-900">Line Items</h4>
+                        <h4 className="text-sm font-semibold text-gray-100">Line Items</h4>
                         <button
                           type="button"
                           onClick={() => addLineItem(index)}
-                          className="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100"
+                          className="inline-flex items-center px-3 py-1 text-xs font-medium text-white bg-[#ff6b35] rounded-md hover:bg-[#ff8c42]"
                         >
                           <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -1003,19 +1003,19 @@ export default function ImportPage() {
                         </button>
                       </div>
                       
-                      <div className="overflow-x-auto border border-gray-200 rounded-lg">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
+                      <div className="overflow-x-auto border border-[#3a3a3a] rounded-lg">
+                        <table className="min-w-full divide-y divide-[#3a3a3a]">
+                          <thead className="bg-[#1a1a1a]">
                             <tr>
-                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700 uppercase">Description</th>
-                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700 uppercase">SKU</th>
-                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700 uppercase w-24">Qty</th>
-                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700 uppercase w-32">Unit Price</th>
-                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700 uppercase w-32">Line Total</th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-300 uppercase">Description</th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-300 uppercase">SKU</th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-300 uppercase w-24">Qty</th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-300 uppercase w-32">Unit Price</th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-300 uppercase w-32">Line Total</th>
                               <th className="px-3 py-2 w-10"></th>
                             </tr>
                           </thead>
-                          <tbody className="bg-white divide-y divide-gray-200">
+                          <tbody className="bg-[#2a2a2a] divide-y divide-[#3a3a3a]">
                             {getEditableData(index)?.poLines.map((line, lineIndex) => (
                               <tr key={lineIndex}>
                                 <td className="px-3 py-2">
@@ -1023,7 +1023,7 @@ export default function ImportPage() {
                                     type="text"
                                     value={line.description}
                                     onChange={(e) => updateLineItem(index, lineIndex, 'description', e.target.value)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full px-2 py-1 border border-[#3a3a3a] bg-[#1a1a1a] rounded text-sm text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#ff6b35]"
                                   />
                                 </td>
                                 <td className="px-3 py-2">
@@ -1031,7 +1031,7 @@ export default function ImportPage() {
                                     type="text"
                                     value={line.supplierSku || ''}
                                     onChange={(e) => updateLineItem(index, lineIndex, 'supplierSku', e.target.value)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full px-2 py-1 border border-[#3a3a3a] bg-[#1a1a1a] rounded text-sm text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#ff6b35]"
                                   />
                                 </td>
                                 <td className="px-3 py-2">
@@ -1039,7 +1039,7 @@ export default function ImportPage() {
                                     type="number"
                                     value={line.quantity}
                                     onChange={(e) => updateLineItem(index, lineIndex, 'quantity', parseFloat(e.target.value) || 0)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full px-2 py-1 border border-[#3a3a3a] bg-[#1a1a1a] rounded text-sm text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#ff6b35]"
                                   />
                                 </td>
                                 <td className="px-3 py-2">
@@ -1048,7 +1048,7 @@ export default function ImportPage() {
                                     step="0.01"
                                     value={line.unitCostExVAT}
                                     onChange={(e) => updateLineItem(index, lineIndex, 'unitCostExVAT', parseFloat(e.target.value) || 0)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full px-2 py-1 border border-[#3a3a3a] bg-[#1a1a1a] rounded text-sm text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#ff6b35]"
                                   />
                                 </td>
                                 <td className="px-3 py-2">
@@ -1057,14 +1057,14 @@ export default function ImportPage() {
                                     step="0.01"
                                     value={line.lineTotalExVAT}
                                     onChange={(e) => updateLineItem(index, lineIndex, 'lineTotalExVAT', parseFloat(e.target.value) || 0)}
-                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full px-2 py-1 border border-[#3a3a3a] bg-[#1a1a1a] rounded text-sm text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#ff6b35]"
                                   />
                                 </td>
                                 <td className="px-3 py-2">
                                   <button
                                     type="button"
                                     onClick={() => removeLineItem(index, lineIndex)}
-                                    className="text-red-600 hover:text-red-800"
+                                    className="text-[#ff6b35] hover:text-[#ff8c42]"
                                   >
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1079,47 +1079,47 @@ export default function ImportPage() {
                     </div>
 
                     {/* Totals */}
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Totals</h4>
+                    <div className="bg-[#1a1a1a] rounded-lg p-4 border border-[#3a3a3a]">
+                      <h4 className="text-sm font-semibold text-gray-100 mb-3">Totals</h4>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Subtotal (ex VAT) - GBP</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Subtotal (ex VAT) - GBP</label>
                           <input
                             type="number"
                             step="0.01"
                             value={getEditableData(index)?.totals.subtotal || 0}
                             onChange={(e) => updateField(index, 'totals.subtotal', parseFloat(e.target.value) || 0)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Extras (Shipping, etc.) - GBP</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Extras (Shipping, etc.) - GBP</label>
                           <input
                             type="number"
                             step="0.01"
                             value={getEditableData(index)?.totals.extras || 0}
                             onChange={(e) => updateField(index, 'totals.extras', parseFloat(e.target.value) || 0)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">VAT - GBP</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">VAT - GBP</label>
                           <input
                             type="number"
                             step="0.01"
                             value={getEditableData(index)?.totals.vat || 0}
                             onChange={(e) => updateField(index, 'totals.vat', parseFloat(e.target.value) || 0)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-700 mb-1">Total - GBP</label>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">Total - GBP</label>
                           <input
                             type="number"
                             step="0.01"
                             value={getEditableData(index)?.totals.total || 0}
                             onChange={(e) => updateField(index, 'totals.total', parseFloat(e.target.value) || 0)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-[#3a3a3a] bg-[#1a1a1a] rounded-md text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#ff6b35]"
                           />
                         </div>
                       </div>
@@ -1130,7 +1130,7 @@ export default function ImportPage() {
                       <button
                         type="button"
                         onClick={() => handleDeleteResult(result.group.id)}
-                        className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 font-medium"
+                        className="px-6 py-2 bg-[#3a3a3a] text-gray-100 rounded-md hover:bg-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#ff6b35] font-medium"
                       >
                         Cancel
                       </button>
@@ -1138,7 +1138,7 @@ export default function ImportPage() {
                         type="button"
                         onClick={() => handleSavePurchaseOrder(result.group.id)}
                         disabled={savingIndex === index}
-                        className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-6 py-2 bg-[#ff6b35] text-white rounded-md hover:bg-[#ff8c42] focus:outline-none focus:ring-2 focus:ring-[#ff6b35] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {savingIndex === index ? 'Saving...' : 'Save Purchase Order'}
                       </button>

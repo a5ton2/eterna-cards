@@ -193,17 +193,17 @@ export default function CreatePOPage() {
   const totalAmount = lineItems.reduce((sum, item) => sum + item.lineTotalExVAT, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#1a1a1a] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Purchase Order</h1>
-            <p className="text-gray-600">Manually create a new purchase order</p>
+            <h1 className="text-3xl font-bold text-gray-100 mb-2">Create Purchase Order</h1>
+            <p className="text-gray-300">Manually create a new purchase order</p>
           </div>
           <button
             onClick={() => router.push('/purchasing/view')}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            className="inline-flex items-center px-4 py-2 border border-[#3a3a3a] text-sm font-medium rounded-md text-gray-100 bg-[#2a2a2a] hover:bg-[#3a3a3a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff6b35] transition-colors"
           >
             <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -214,7 +214,7 @@ export default function CreatePOPage() {
 
         {/* Error Display */}
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="mb-6 bg-[#3a2a2a] border border-red-500 rounded-lg p-4">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -222,8 +222,8 @@ export default function CreatePOPage() {
                 </svg>
               </div>
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">Error</h3>
-                <p className="text-sm text-red-700 mt-1">{error}</p>
+                <h3 className="text-sm font-medium text-red-400">Error</h3>
+                <p className="text-sm text-red-300 mt-1">{error}</p>
               </div>
             </div>
           </div>
@@ -231,13 +231,13 @@ export default function CreatePOPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* PO Header Section */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Purchase Order Details</h2>
+          <div className="bg-[#2a2a2a] rounded-lg shadow p-6 border border-[#3a3a3a]">
+            <h2 className="text-lg font-medium text-gray-100 mb-4">Purchase Order Details</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Supplier Selection */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Supplier <span className="text-red-500">*</span>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Supplier <span className="text-[#ff6b35]">*</span>
                 </label>
                 <select
                   value={selectedSupplierId}
@@ -245,7 +245,7 @@ export default function CreatePOPage() {
                     setSelectedSupplierId(e.target.value);
                     if (e.target.value) setNewSupplierName('');
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                  className="w-full px-3 py-2 border border-[#3a3a3a] rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6b35] text-gray-100 bg-[#1a1a1a]"
                 >
                   <option value="">-- Select existing supplier or create new --</option>
                   {suppliers.map((supplier) => (
@@ -262,42 +262,42 @@ export default function CreatePOPage() {
                       value={newSupplierName}
                       onChange={(e) => setNewSupplierName(e.target.value)}
                       placeholder="Or enter new supplier name"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                      className="w-full px-3 py-2 border border-[#3a3a3a] rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6b35] text-gray-100 bg-[#1a1a1a]"
                     />
                   </div>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Invoice Number <span className="text-red-500">*</span>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Invoice Number <span className="text-[#ff6b35]">*</span>
                 </label>
                 <input
                   type="text"
                   value={invoiceNumber}
                   onChange={(e) => setInvoiceNumber(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                  className="w-full px-3 py-2 border border-[#3a3a3a] rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6b35] text-gray-100 bg-[#1a1a1a]"
                   placeholder="Enter invoice number"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Invoice Date</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Invoice Date</label>
                 <input
                   type="date"
                   value={invoiceDate}
                   onChange={(e) => setInvoiceDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                  className="w-full px-3 py-2 border border-[#3a3a3a] rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6b35] text-gray-100 bg-[#1a1a1a]"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Currency</label>
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                  className="w-full px-3 py-2 border border-[#3a3a3a] rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6b35] text-gray-100 bg-[#1a1a1a]"
                 >
                   <option value="USD">USD</option>
                   <option value="EUR">EUR</option>
@@ -308,12 +308,12 @@ export default function CreatePOPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Payment Terms</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Payment Terms</label>
                 <input
                   type="text"
                   value={paymentTerms}
                   onChange={(e) => setPaymentTerms(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                  className="w-full px-3 py-2 border border-[#3a3a3a] rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6b35] text-gray-100 bg-[#1a1a1a]"
                   placeholder="e.g., Net 30, Due on Receipt"
                 />
               </div>
@@ -321,13 +321,13 @@ export default function CreatePOPage() {
           </div>
 
           {/* Line Items Section */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-[#2a2a2a] rounded-lg shadow p-6 border border-[#3a3a3a]">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-medium text-gray-900">Line Items</h2>
+              <h2 className="text-lg font-medium text-gray-100">Line Items</h2>
               <button
                 type="button"
                 onClick={handleAddLineItem}
-                className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-[#ff6b35] hover:bg-[#ff8c42] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff6b35]"
               >
                 <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -337,38 +337,38 @@ export default function CreatePOPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-[#3a3a3a]">
+                <thead className="bg-[#1a1a1a]">
                   <tr>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Description *
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       SKU
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Quantity
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Unit Price
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Total
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-[#2a2a2a] divide-y divide-[#3a3a3a]">
                   {lineItems.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50">
+                    <tr key={item.id} className="hover:bg-[#1a1a1a]">
                       <td className="px-3 py-3">
                         <input
                           type="text"
                           value={item.description}
                           onChange={(e) => handleUpdateLineItem(item.id, 'description', e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900 bg-white"
+                          className="w-full px-2 py-1 border border-[#3a3a3a] rounded text-sm focus:outline-none focus:ring-1 focus:ring-[#ff6b35] text-gray-100 bg-[#1a1a1a]"
                           placeholder="Item description"
                         />
                       </td>
@@ -377,7 +377,7 @@ export default function CreatePOPage() {
                           type="text"
                           value={item.supplierSku}
                           onChange={(e) => handleUpdateLineItem(item.id, 'supplierSku', e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900 bg-white"
+                          className="w-full px-2 py-1 border border-[#3a3a3a] rounded text-sm focus:outline-none focus:ring-1 focus:ring-[#ff6b35] text-gray-100 bg-[#1a1a1a]"
                           placeholder="SKU"
                         />
                       </td>
@@ -386,7 +386,7 @@ export default function CreatePOPage() {
                           type="number"
                           value={item.quantity}
                           onChange={(e) => handleUpdateLineItem(item.id, 'quantity', parseFloat(e.target.value) || 0)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900 bg-white"
+                          className="w-full px-2 py-1 border border-[#3a3a3a] rounded text-sm focus:outline-none focus:ring-1 focus:ring-[#ff6b35] text-gray-100 bg-[#1a1a1a]"
                           min="0"
                           step="1"
                         />
@@ -396,12 +396,12 @@ export default function CreatePOPage() {
                           type="number"
                           value={item.unitCostExVAT}
                           onChange={(e) => handleUpdateLineItem(item.id, 'unitCostExVAT', parseFloat(e.target.value) || 0)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900 bg-white"
+                          className="w-full px-2 py-1 border border-[#3a3a3a] rounded text-sm focus:outline-none focus:ring-1 focus:ring-[#ff6b35] text-gray-100 bg-[#1a1a1a]"
                           min="0"
                           step="0.01"
                         />
                       </td>
-                      <td className="px-3 py-3 text-sm font-medium text-gray-900">
+                      <td className="px-3 py-3 text-sm font-medium text-gray-100">
                         {currency} {item.lineTotalExVAT.toFixed(2)}
                       </td>
                       <td className="px-3 py-3">
@@ -409,7 +409,7 @@ export default function CreatePOPage() {
                           type="button"
                           onClick={() => handleRemoveLineItem(item.id)}
                           disabled={lineItems.length === 1}
-                          className="text-red-600 hover:text-red-800 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="text-[#ff6b35] hover:text-[#ff8c42] text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                           title="Remove line item"
                         >
                           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -425,9 +425,9 @@ export default function CreatePOPage() {
 
             {/* Total */}
             <div className="mt-4 flex justify-end">
-              <div className="bg-gray-50 px-4 py-3 rounded-lg">
-                <div className="text-sm text-gray-600">Total (ex VAT) - GBP</div>
-                <div className="text-2xl font-bold text-gray-900">
+              <div className="bg-[#1a1a1a] px-4 py-3 rounded-lg border border-[#3a3a3a]">
+                <div className="text-sm text-gray-400">Total (ex VAT) - GBP</div>
+                <div className="text-2xl font-bold text-[#ff6b35]">
                   £{totalAmount.toFixed(2)}
                 </div>
               </div>
@@ -439,7 +439,7 @@ export default function CreatePOPage() {
             <button
               type="button"
               onClick={() => router.push('/purchasing/view')}
-              className="px-6 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="px-6 py-2 text-sm font-medium text-gray-100 bg-[#3a3a3a] border border-[#4a4a4a] rounded-md hover:bg-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff6b35]"
               disabled={loading}
             >
               Cancel
@@ -447,7 +447,7 @@ export default function CreatePOPage() {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2 text-sm font-medium text-white bg-[#ff6b35] border border-transparent rounded-md hover:bg-[#ff8c42] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff6b35] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span className="flex items-center">
