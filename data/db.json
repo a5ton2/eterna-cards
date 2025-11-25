@@ -1,350 +1,348 @@
 {
   "suppliers": [
     {
-      "id": "5c8fbdee-2b8d-4f30-bb0e-74187b1ffb77",
+      "id": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
       "name": "Korean",
       "address": null,
       "email": null,
       "phone": null,
       "vatNumber": null,
-      "createdAt": "2025-11-12T15:06:45.540Z"
-    },
-    {
-      "id": "a1b1fb99-5b0e-482a-9e48-740b174c2625",
-      "name": "Asmodee",
-      "address": "Esdevium Games Limited\nHogmoor House\nLiss\nHampshire GU33 7QQ\nUnited Kingdom",
-      "email": null,
-      "phone": "+44 (0) 1420 593 593",
-      "vatNumber": "GB 365828967",
-      "createdAt": "2025-11-12T15:08:24.426Z"
-    },
-    {
-      "id": "72d7ac9d-5392-4d9c-8a42-864c6a740721",
-      "name": "heo (UK) Ltd",
-      "address": "1a Ash House Breckenwood Road Fulbourn Cambridge CB21 5DQ United Kingdom",
-      "email": "info@heo.co.uk",
-      "phone": "+44 (0) 1223 789 780",
-      "vatNumber": "GB190 3321 33",
-      "createdAt": "2025-11-12T15:34:51.062Z"
+      "createdAt": "2025-11-24T18:40:09.856Z"
     }
   ],
   "purchaseOrders": [
     {
-      "id": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "supplierId": "5c8fbdee-2b8d-4f30-bb0e-74187b1ffb77",
+      "id": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
       "invoiceNumber": null,
       "invoiceDate": null,
       "currency": "GBP",
       "paymentTerms": null,
-      "createdAt": "2025-11-12T15:06:45.544Z"
-    },
-    {
-      "id": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "supplierId": "a1b1fb99-5b0e-482a-9e48-740b174c2625",
-      "invoiceNumber": "1608573",
-      "invoiceDate": "2025-06-11",
-      "currency": "GBP",
-      "paymentTerms": "Proforma-Credit Nil PPO Nil",
-      "createdAt": "2025-11-12T15:08:24.429Z"
-    },
-    {
-      "id": "ace96845-b799-48b1-92b8-6d60b95e1e6e",
-      "supplierId": "72d7ac9d-5392-4d9c-8a42-864c6a740721",
-      "invoiceNumber": "79310",
-      "invoiceDate": "2025-12-11",
-      "currency": "GBP",
-      "paymentTerms": null,
-      "createdAt": "2025-11-12T15:34:51.067Z"
+      "createdAt": "2025-11-24T18:40:09.857Z"
     }
   ],
   "poLines": [
     {
-      "id": "3d79bfdd-a435-410e-9822-57470f0e8f81",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "[10 Boxes SET] Pokemon Card Sword&Shield Scarlet&Violet Booster Box Korean ver. × 1 Black Bolt",
-      "supplierSku": null,
-      "quantity": 1,
-      "unitCostExVAT": 286.76,
-      "lineTotalExVAT": 286.76
-    },
-    {
-      "id": "ed3e0bf0-17f4-4230-9968-d647ea36c4f3",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "[10 Boxes SET] Pokemon Card Sword&Shield Scarlet&Violet Booster Box Korean ver. × 1 Shiny",
-      "supplierSku": null,
-      "quantity": 1,
-      "unitCostExVAT": 713.7,
-      "lineTotalExVAT": 713.7
-    },
-    {
-      "id": "92efa03b-4cb1-4e52-969e-577afcd57fd3",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "[10 Boxes SET] Pokemon Card Sword&Shield Scarlet&Violet Booster Box Korean ver. × 1 Terastal",
-      "supplierSku": null,
-      "quantity": 1,
-      "unitCostExVAT": 510.28,
-      "lineTotalExVAT": 510.28
-    },
-    {
-      "id": "2a96758b-80d7-4cfa-a2fc-78e13fe322e7",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "Pokemon Cards Silver Lance Booster Box s6H Korean Ver. × 3",
+      "id": "69265fff-1897-47c3-8b58-b9c568dff7f9",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "description": "Pokemon Cards Silver Lance Booster Box s6H Korean Ver. x 3",
       "supplierSku": null,
       "quantity": 3,
-      "unitCostExVAT": 86.76,
-      "lineTotalExVAT": 86.76
+      "unitCostExVAT": 22.08,
+      "lineTotalExVAT": 66.23
     },
     {
-      "id": "8e3f63aa-5677-4f32-b709-a3419dc97508",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "Pokémon Cards Ruler of the Black Flame/Obsidian Flames Booster Box sv3 Korean ver. × 5",
+      "id": "f9df4652-80b1-499d-8c86-6d8f5eb9d33e",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "description": "Pokémon Cards Ruler of the Black Flame/Obsidian Flames Booster Box sv3 Korean ver. x 5",
       "supplierSku": null,
       "quantity": 5,
-      "unitCostExVAT": 142.17,
-      "lineTotalExVAT": 142.17
+      "unitCostExVAT": 21.71,
+      "lineTotalExVAT": 108.53
     },
     {
-      "id": "3680797f-0b68-4000-8a9b-969e08d14756",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "Pokémon Card Heat Wave Arena Booster Box sv9a Sealed Korean ver. × 3 Without Promo Pack",
+      "id": "e72f626c-6fd2-430f-9c91-bb9763aef5e6",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "description": "Pokemon Card Heat Wave Arena Booster Box sv9a Sealed Korean ver. x 3 Without Promo Pack",
       "supplierSku": null,
       "quantity": 3,
-      "unitCostExVAT": 76.93,
-      "lineTotalExVAT": 76.93
+      "unitCostExVAT": 19.58,
+      "lineTotalExVAT": 58.73
     },
     {
-      "id": "557709ac-1092-4fe0-82f6-12adf85fce80",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "Pokémon Cards Blue Sky Stream Evolving Skies Booster Box s7r Korean Ver. × 5",
+      "id": "9c233091-b7fa-44d8-b0a4-0e2b561b4db3",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "description": "Pokémon Cards Blue Sky Stream Evolving Skies Booster Box s7r Korean Ver. x 5",
       "supplierSku": null,
       "quantity": 5,
-      "unitCostExVAT": 210.43,
-      "lineTotalExVAT": 210.43
+      "unitCostExVAT": 32.13,
+      "lineTotalExVAT": 160.63
     },
     {
-      "id": "895529fe-af8f-4122-8d81-7b7b84daf9c1",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "Pokemon Card Battle Partners Booster Box sv9 Korean ver. Journey Together × 3 Without Promo Pack",
+      "id": "66f256fc-a396-4094-953d-4d5ee535beb9",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "description": "Pokemon Card Battle Partners Booster Box sv9 Korean ver. Journey Together x 3 Without Promo Pack",
       "supplierSku": null,
       "quantity": 3,
-      "unitCostExVAT": 67.32,
-      "lineTotalExVAT": 67.32
+      "unitCostExVAT": 17.13,
+      "lineTotalExVAT": 51.39
     },
     {
-      "id": "70fa6c28-1a1e-4ce5-a69f-cb6bbfbc48b2",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "Pokemon Card Wild Force Booster Box sv5K Korean ver. × 6",
+      "id": "81a0d6db-730a-4a23-ab74-0000ac84ad9a",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "description": "Pokemon Card Wild Force Booster Box sv5K Korean ver. x 6",
       "supplierSku": null,
       "quantity": 6,
-      "unitCostExVAT": 130.48,
-      "lineTotalExVAT": 130.48
+      "unitCostExVAT": 16.6,
+      "lineTotalExVAT": 99.6
     },
     {
-      "id": "927e4515-ca24-4de2-9084-a11f06218505",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "[10 Boxes SET] Pokemon Card Sword&Shield Scarlet&Violet Booster Box Korean ver. × 2 151",
+      "id": "6551dcb6-208e-453e-8c38-f804591bd805",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "description": "[10 Boxes SET] Pokemon Card Sword&Shield Scarlet&Violet Booster Box Korean ver. x 2",
       "supplierSku": null,
       "quantity": 2,
-      "unitCostExVAT": 1037.06,
-      "lineTotalExVAT": 1037.06
+      "unitCostExVAT": 395.82,
+      "lineTotalExVAT": 791.65
     },
     {
-      "id": "c6fddb56-0194-409f-9d0f-1faed6933f8f",
-      "purchaseOrderId": "e782af2f-c4a4-42a2-b560-cb5db1a842e7",
-      "description": "[10 Boxes SET] Pokemon Card Sword&Shield Scarlet&Violet Booster Box Korean ver. × 1 White Flare",
+      "id": "52ebdb06-8535-4400-a0ff-d8029606f303",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "description": "[10 Boxes SET] Pokemon Card Sword&Shield Scarlet&Violet Booster Box Korean ver. x 1",
       "supplierSku": null,
       "quantity": 1,
-      "unitCostExVAT": 277.2,
-      "lineTotalExVAT": 277.2
+      "unitCostExVAT": 211.6,
+      "lineTotalExVAT": 211.6
+    }
+  ],
+  "products": [
+    {
+      "id": "020ed9a6-1a62-4909-88b2-8178e7a9ad61",
+      "name": "Pokemon Cards Silver Lance Booster Box s6H Korean Ver. x 3",
+      "primarySku": null,
+      "supplierSku": null,
+      "barcodes": [],
+      "aliases": [
+        "Pokemon Cards Silver Lance Booster Box s6H Korean Ver. x 3"
+      ],
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "category": null,
+      "tags": [],
+      "createdAt": "2025-11-24T18:40:09.858Z",
+      "updatedAt": "2025-11-24T18:40:09.858Z"
     },
     {
-      "id": "52336dc2-2404-4b88-87a3-3828f6e7f0c5",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Shiny Playmat-Spider-Man Rampage",
-      "supplierSku": "GGS40178ML",
-      "quantity": 1,
-      "unitCostExVAT": 11.9,
-      "lineTotalExVAT": 11.6
+      "id": "9055293b-a955-445c-a8b2-01ddb9dff34d",
+      "name": "Pokémon Cards Ruler of the Black Flame/Obsidian Flames Booster Box sv3 Korean ver. x 5",
+      "primarySku": null,
+      "supplierSku": null,
+      "barcodes": [],
+      "aliases": [
+        "Pokémon Cards Ruler of the Black Flame/Obsidian Flames Booster Box sv3 Korean ver. x 5"
+      ],
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "category": null,
+      "tags": [],
+      "createdAt": "2025-11-24T18:40:09.858Z",
+      "updatedAt": "2025-11-24T18:40:09.858Z"
     },
     {
-      "id": "249333c1-1e82-49e1-988e-034bd148a904",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Shiny Playmat-Spider-Man Brand",
-      "supplierSku": "GGS40179ML",
-      "quantity": 1,
-      "unitCostExVAT": 11.9,
-      "lineTotalExVAT": 11.6
+      "id": "ab4d0b9d-0256-46e4-b86d-0004e298d88c",
+      "name": "Pokemon Card Heat Wave Arena Booster Box sv9a Sealed Korean ver. x 3 Without Promo Pack",
+      "primarySku": null,
+      "supplierSku": null,
+      "barcodes": [],
+      "aliases": [
+        "Pokemon Card Heat Wave Arena Booster Box sv9a Sealed Korean ver. x 3 Without Promo Pack"
+      ],
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "category": null,
+      "tags": [],
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-24T18:40:09.859Z"
     },
     {
-      "id": "cebedf21-074d-400d-af6c-c773a6e026e7",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Shiny Playmat-Spider-Man Island",
-      "supplierSku": "GGS40180ML",
-      "quantity": 1,
-      "unitCostExVAT": 11.9,
-      "lineTotalExVAT": 11.6
+      "id": "26810820-3751-47eb-9295-2eabf2bef209",
+      "name": "Pokémon Cards Blue Sky Stream Evolving Skies Booster Box s7r Korean Ver. x 5",
+      "primarySku": null,
+      "supplierSku": null,
+      "barcodes": [],
+      "aliases": [
+        "Pokémon Cards Blue Sky Stream Evolving Skies Booster Box s7r Korean Ver. x 5"
+      ],
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "category": null,
+      "tags": [],
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-24T18:40:09.859Z"
     },
     {
-      "id": "1f30b36c-40db-47f9-8229-1d4a8f4d52e4",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Shiny Playmat-Spider-Man Mountain",
-      "supplierSku": "GGS40181ML",
-      "quantity": 1,
-      "unitCostExVAT": 11.9,
-      "lineTotalExVAT": 11.6
+      "id": "b0ee1713-6cf4-42e4-bd65-2b64023f486f",
+      "name": "Pokemon Card Battle Partners Booster Box sv9 Korean ver. Journey Together x 3 Without Promo Pack",
+      "primarySku": null,
+      "supplierSku": null,
+      "barcodes": [],
+      "aliases": [
+        "Pokemon Card Battle Partners Booster Box sv9 Korean ver. Journey Together x 3 Without Promo Pack"
+      ],
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "category": null,
+      "tags": [],
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-24T18:40:09.859Z"
     },
     {
-      "id": "c2bec042-0496-4dc4-8cff-065cd7ab2714",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Shiny Playmat-Spider-Man Swamp",
-      "supplierSku": "GGS40182ML",
-      "quantity": 1,
-      "unitCostExVAT": 11.9,
-      "lineTotalExVAT": 11.6
+      "id": "aa853089-4d2e-4394-97b8-da29f2cea705",
+      "name": "Pokemon Card Wild Force Booster Box sv5K Korean ver. x 6",
+      "primarySku": null,
+      "supplierSku": null,
+      "barcodes": [],
+      "aliases": [
+        "Pokemon Card Wild Force Booster Box sv5K Korean ver. x 6"
+      ],
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "category": null,
+      "tags": [],
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-24T18:40:09.859Z"
     },
     {
-      "id": "336ffe40-b821-4654-8bbf-4fc3ae259cda",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Shiny Playmat-Spider-Man Forest",
-      "supplierSku": "GGS40182ML",
-      "quantity": 1,
-      "unitCostExVAT": 11.9,
-      "lineTotalExVAT": 11.6
-    },
+      "id": "798a2089-26ac-4d07-a2b7-90892ae752c3",
+      "name": "[10 Boxes SET] Pokemon Card Sword&Shield Scarlet&Violet Booster Box Korean ver. x 2",
+      "primarySku": null,
+      "supplierSku": null,
+      "barcodes": [],
+      "aliases": [
+        "[10 Boxes SET] Pokemon Card Sword&Shield Scarlet&Violet Booster Box Korean ver. x 2",
+        "[10 Boxes SET] Pokemon Card Sword&Shield Scarlet&Violet Booster Box Korean ver. x 1"
+      ],
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "category": null,
+      "tags": [],
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-24T18:40:09.859Z"
+    }
+  ],
+  "inventory": [
     {
-      "id": "b8e874a8-8d75-47bf-9a0f-e9119dce6a9d",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "One Piece Card Game: Booster Pack (OP-03)",
-      "supplierSku": "BCL2802208",
-      "quantity": 36,
-      "unitCostExVAT": 64.8,
-      "lineTotalExVAT": 2216.16
-    },
+      "id": "3232ae66-e93e-4ca7-b1ec-de21c0aab9f2",
+      "productId": "798a2089-26ac-4d07-a2b7-90892ae752c3",
+      "quantityOnHand": 3,
+      "averageCostGBP": 334.4133,
+      "lastUpdated": "2025-11-25T16:20:59.810Z"
+    }
+  ],
+  "transit": [
     {
-      "id": "8241dba3-4adb-48da-981f-d51a11cd4c5c",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Premium Art Sleeves-Spider-Man Plain",
-      "supplierSku": "GGS15115ML",
-      "quantity": 2,
-      "unitCostExVAT": 6.85,
-      "lineTotalExVAT": 13.36
-    },
-    {
-      "id": "e6301225-b76e-46db-a337-b9cd16674b37",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Premium Art Sleeves-Spider-Man Island",
-      "supplierSku": "GGS15116ML",
-      "quantity": 2,
-      "unitCostExVAT": 6.85,
-      "lineTotalExVAT": 13.36
-    },
-    {
-      "id": "b1168461-4ad7-4980-8403-a143603ff2b5",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Premium Art Sleeves-Spider-Man Mountain",
-      "supplierSku": "GGS15117ML",
-      "quantity": 2,
-      "unitCostExVAT": 6.85,
-      "lineTotalExVAT": 13.36
-    },
-    {
-      "id": "71642ea0-8e92-40df-8323-209af2b47d0a",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Premium Art Sleeves-Spider-Man Swamp",
-      "supplierSku": "GGS15118ML",
-      "quantity": 2,
-      "unitCostExVAT": 6.85,
-      "lineTotalExVAT": 13.36
-    },
-    {
-      "id": "f2348f8c-e7ac-4dd8-a46b-e051abc1c75d",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Premium Art Sleeves-Spider-Man Forest",
-      "supplierSku": "GGS15119ML",
-      "quantity": 2,
-      "unitCostExVAT": 6.85,
-      "lineTotalExVAT": 13.36
-    },
-    {
-      "id": "cc98d4dd-95a4-4cbb-9bf5-25554158f18d",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Premium Art Sleeves-Spider-Man",
-      "supplierSku": "GGS15120ML",
+      "id": "85afbe1a-27a0-4ead-a4d4-113fc171443a",
+      "productId": "020ed9a6-1a62-4909-88b2-8178e7a9ad61",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "poLineId": "69265fff-1897-47c3-8b58-b9c568dff7f9",
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
       "quantity": 3,
-      "unitCostExVAT": 6.85,
-      "lineTotalExVAT": 20.04
+      "remainingQuantity": 3,
+      "unitCostGBP": 22.08,
+      "status": "in_transit",
+      "createdAt": "2025-11-24T18:40:09.858Z",
+      "updatedAt": "2025-11-24T18:40:09.858Z"
     },
     {
-      "id": "08d9d5bf-5eaa-4059-96fb-71c5b93d224f",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Premium Art Sleeves-Green Goblin",
-      "supplierSku": "GGS15121ML",
+      "id": "897e4231-ec3f-4f3d-8dd2-fd1678a8f1a6",
+      "productId": "9055293b-a955-445c-a8b2-01ddb9dff34d",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "poLineId": "f9df4652-80b1-499d-8c86-6d8f5eb9d33e",
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "quantity": 5,
+      "remainingQuantity": 5,
+      "unitCostGBP": 21.71,
+      "status": "in_transit",
+      "createdAt": "2025-11-24T18:40:09.858Z",
+      "updatedAt": "2025-11-24T18:40:09.858Z"
+    },
+    {
+      "id": "d40befdb-1dae-4878-aab6-9cde17d15c5c",
+      "productId": "ab4d0b9d-0256-46e4-b86d-0004e298d88c",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "poLineId": "e72f626c-6fd2-430f-9c91-bb9763aef5e6",
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
       "quantity": 3,
-      "unitCostExVAT": 6.85,
-      "lineTotalExVAT": 20.04
+      "remainingQuantity": 3,
+      "unitCostGBP": 19.58,
+      "status": "in_transit",
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-24T18:40:09.859Z"
     },
     {
-      "id": "40d873e8-6951-4ffa-af6d-9bd194cba704",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Premium Art Sleeves-Venom",
-      "supplierSku": "GGS15122ML",
+      "id": "f4ae5221-39ad-4c22-928d-a63ff9e42dd0",
+      "productId": "26810820-3751-47eb-9295-2eabf2bef209",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "poLineId": "9c233091-b7fa-44d8-b0a4-0e2b561b4db3",
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "quantity": 5,
+      "remainingQuantity": 5,
+      "unitCostGBP": 32.13,
+      "status": "in_transit",
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-24T18:40:09.859Z"
+    },
+    {
+      "id": "0e819bef-9e38-495a-af48-d6f28af2b2fc",
+      "productId": "b0ee1713-6cf4-42e4-bd65-2b64023f486f",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "poLineId": "66f256fc-a396-4094-953d-4d5ee535beb9",
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
       "quantity": 3,
-      "unitCostExVAT": 6.85,
-      "lineTotalExVAT": 20.04
+      "remainingQuantity": 3,
+      "unitCostGBP": 17.13,
+      "status": "in_transit",
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-24T18:40:09.859Z"
     },
     {
-      "id": "b30742d6-19e4-441d-a8d5-c1e34c498bb1",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Premium Art Sleeves-Spider-Gwen",
-      "supplierSku": "GGS15123ML",
-      "quantity": 3,
-      "unitCostExVAT": 6.85,
-      "lineTotalExVAT": 20.04
+      "id": "7a2bc335-bbf8-4980-a24f-b853980e56f1",
+      "productId": "aa853089-4d2e-4394-97b8-da29f2cea705",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "poLineId": "81a0d6db-730a-4a23-ab74-0000ac84ad9a",
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "quantity": 6,
+      "remainingQuantity": 6,
+      "unitCostGBP": 16.6,
+      "status": "in_transit",
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-24T18:40:09.859Z"
     },
     {
-      "id": "72aa490c-3624-4e2a-90ed-63bb1095f769",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man Premium Art Sleeves-Miles Morales",
-      "supplierSku": "GGS15124ML",
-      "quantity": 3,
-      "unitCostExVAT": 6.85,
-      "lineTotalExVAT": 20.04
-    },
-    {
-      "id": "86605396-297d-4586-9b81-1c6c096a7da9",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man 18-Pocket Album-Spider-Man/Spider-Gwen",
-      "supplierSku": "GGS32044ML",
+      "id": "f148e3fd-717c-4971-9448-319901eb4c04",
+      "productId": "798a2089-26ac-4d07-a2b7-90892ae752c3",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "poLineId": "6551dcb6-208e-453e-8c38-f804591bd805",
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
       "quantity": 2,
-      "unitCostExVAT": 11,
-      "lineTotalExVAT": 21.45
+      "remainingQuantity": 0,
+      "unitCostGBP": 395.82,
+      "status": "received",
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-25T16:20:59.810Z"
     },
     {
-      "id": "7fa370e3-ac45-41e7-ab77-f22576c93dcf",
-      "purchaseOrderId": "36915572-93c4-436d-a8f4-d7af1414965f",
-      "description": "Gamegenic MTG Marvel's Spider-Man 24-Pocket Album-Spider-Man/Green Goblin",
-      "supplierSku": "GGS32045ML",
-      "quantity": 2,
-      "unitCostExVAT": 12.85,
-      "lineTotalExVAT": 25.06
+      "id": "7c44612e-9613-40b8-885a-034013e0f4e7",
+      "productId": "798a2089-26ac-4d07-a2b7-90892ae752c3",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "poLineId": "52ebdb06-8535-4400-a0ff-d8029606f303",
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "quantity": 1,
+      "remainingQuantity": 0,
+      "unitCostGBP": 211.6,
+      "status": "received",
+      "createdAt": "2025-11-24T18:40:09.859Z",
+      "updatedAt": "2025-11-25T16:20:59.810Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "2ffa12e5-39f9-44de-9ab0-4405489242e4",
+      "purchaseOrderId": "73e31db5-24c6-40d7-8869-d5776d96b64e",
+      "supplierId": "3cd92ddd-0f2d-426b-833d-f5cb53da8349",
+      "invoiceNumber": null,
+      "invoiceDate": null,
+      "currency": "GBP",
+      "createdAt": "2025-11-24T18:40:09.857Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "cbcc2900-16ff-475b-a9e0-4f31d0b08bd8",
+      "title": "test",
+      "completed": false,
+      "createdAt": "2025-11-25T16:17:11.423Z",
+      "completedAt": null
     },
     {
-      "id": "ebaea230-ce46-4eb4-b8b9-048514789abd",
-      "purchaseOrderId": "ace96845-b799-48b1-92b8-6d60b95e1e6e",
-      "description": "Ultimate Guard Card Covers Toploading (25) - 35 pt",
-      "supplierSku": "UGD011302",
-      "quantity": 80,
-      "unitCostExVAT": 1.86,
-      "lineTotalExVAT": 148.8
-    },
-    {
-      "id": "2dac5071-103d-48b3-a35e-749720572136",
-      "purchaseOrderId": "ace96845-b799-48b1-92b8-6d60b95e1e6e",
-      "description": "DPG - Magic the Gathering Avatar: The Last Airbender Beginner Box Case (3) english",
-      "supplierSku": "WOTCD45880000DPIG",
-      "quantity": 4,
-      "unitCostExVAT": 59.58,
-      "lineTotalExVAT": 238.32
+      "id": "32a7664e-8386-48a5-9090-83806a44386f",
+      "title": "test",
+      "completed": false,
+      "createdAt": "2025-11-25T16:17:13.074Z",
+      "completedAt": null
     }
   ]
 }

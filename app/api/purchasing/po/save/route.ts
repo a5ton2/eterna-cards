@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { findOrCreateSupplier, createPurchaseOrder, createPOLines } from '@/lib/db';
+import { findOrCreateSupplier, createPurchaseOrder, createPOLines, syncInventoryFromPurchaseOrder, createOrUpdateInvoiceForPurchaseOrder } from '@/lib/db';
 
 // Force Node.js runtime for lowdb
 export const runtime = 'nodejs';
@@ -67,6 +67,15 @@ export async function POST(request: NextRequest) {
         paymentTerms: data.purchaseOrder.paymentTerms || null,
       });
 
+      // Create or update invoice record linked to this purchase order
+      const invoice = await createOrUpdateInvoiceForPurchaseOrder({
+        purchaseOrderId,
+        supplierId,
+        invoiceNumber: data.purchaseOrder.invoiceNumber || null,
+        invoiceDate: data.purchaseOrder.invoiceDate || null,
+        currency: 'GBP',
+      });
+
       // Create PO lines
       const poLines = await createPOLines(
         data.poLines.map((line) => ({
@@ -79,12 +88,21 @@ export async function POST(request: NextRequest) {
         }))
       );
 
+      // Mark all extracted items as in transit for inventory management
+      const inventorySync = await syncInventoryFromPurchaseOrder({
+        supplierId,
+        purchaseOrderId,
+        poLines,
+      });
+
       return NextResponse.json({
         success: true,
         data: {
           supplierId,
           purchaseOrderId,
           savedLines: poLines.length,
+          inventorySync,
+          invoice,
         },
       });
     } catch (error) {

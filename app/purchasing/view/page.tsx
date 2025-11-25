@@ -34,10 +34,27 @@ interface POLine {
   lineTotalExVAT: number;
 }
 
+type TransitStatus = 'in_transit' | 'partially_received' | 'received';
+
+interface TransitRecord {
+  id: string;
+  productId: string;
+  purchaseOrderId: string;
+  poLineId: string;
+  supplierId: string;
+  quantity: number;
+  remainingQuantity: number;
+  unitCostGBP: number;
+  status: TransitStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface DatabaseData {
   suppliers: Supplier[];
   purchaseOrders: PurchaseOrder[];
   poLines: POLine[];
+   transit: TransitRecord[];
 }
 
 export default function ViewDataPage() {
@@ -88,6 +105,40 @@ export default function ViewDataPage() {
 
   const getPOLines = (purchaseOrderId: string) => {
     return data?.poLines.filter(line => line.purchaseOrderId === purchaseOrderId) || [];
+  };
+
+  const getLineReceiveStatus = (line: POLine) => {
+    if (!data?.transit || data.transit.length === 0) {
+      return {
+        status: 'not_received' as const,
+        receivedQuantity: 0,
+        remainingQuantity: 0,
+      };
+    }
+
+    const records = data.transit.filter((t) => t.poLineId === line.id);
+    if (records.length === 0) {
+      return {
+        status: 'not_received' as const,
+        receivedQuantity: 0,
+        remainingQuantity: 0,
+      };
+    }
+
+    const totalQuantity = records.reduce((sum, r) => sum + (r.quantity || 0), 0);
+    const totalRemaining = records.reduce((sum, r) => sum + (r.remainingQuantity || 0), 0);
+    const receivedQuantity = Math.max(totalQuantity - totalRemaining, 0);
+
+    let status: 'not_received' | 'partial' | 'received';
+    if (receivedQuantity <= 0) {
+      status = 'not_received';
+    } else if (totalRemaining <= 0) {
+      status = 'received';
+    } else {
+      status = 'partial';
+    }
+
+    return { status, receivedQuantity, remainingQuantity: totalRemaining };
   };
 
   const formatDate = (dateString: string | null) => {
@@ -658,6 +709,9 @@ export default function ViewDataPage() {
                             <th className="px-3 py-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                               SKU
                             </th>
+                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                              Status
+                            </th>
                             <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Qty
                             </th>
@@ -670,25 +724,57 @@ export default function ViewDataPage() {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-[#3a3a3a]">
-                          {lines.map((line) => (
-                            <tr key={line.id} className="hover:bg-[#1a1a1a]">
-                              <td className="px-3 py-3 text-sm text-gray-100">
-                                {line.description}
-                              </td>
-                              <td className="px-3 py-3 text-sm text-gray-400 font-mono">
-                                {line.supplierSku || '-'}
-                              </td>
-                              <td className="px-3 py-3 text-sm text-gray-100 text-right">
-                                {line.quantity}
-                              </td>
-                              <td className="px-3 py-3 text-sm text-gray-100 text-right">
-                                {formatCurrency(line.unitCostExVAT, po.currency)}
-                              </td>
-                              <td className="px-3 py-3 text-sm font-medium text-gray-100 text-right">
-                                {formatCurrency(line.lineTotalExVAT, po.currency)}
-                              </td>
-                            </tr>
-                          ))}
+                          {lines.map((line) => {
+                            const lineStatus = getLineReceiveStatus(line);
+                            const isReceived = lineStatus.status === 'received';
+                            const isPartial = lineStatus.status === 'partial';
+
+                            return (
+                              <tr
+                                key={line.id}
+                                className={`hover:bg-[#1a1a1a] ${
+                                  isReceived
+                                    ? 'bg-[#102515]'
+                                    : isPartial
+                                    ? 'bg-[#281f10]'
+                                    : ''
+                                }`}
+                              >
+                                <td className="px-3 py-3 text-sm text-gray-100">
+                                  {line.description}
+                                </td>
+                                <td className="px-3 py-3 text-sm text-gray-400 font-mono">
+                                  {line.supplierSku || '-'}
+                                </td>
+                                <td className="px-3 py-3 text-sm">
+                                  {lineStatus.status === 'received' && (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-[#166534] text-green-100 border border-green-500/60">
+                                      Received
+                                    </span>
+                                  )}
+                                  {lineStatus.status === 'partial' && (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-[#78350f] text-amber-100 border border-amber-500/60">
+                                      Partially received ({lineStatus.receivedQuantity}/{line.quantity})
+                                    </span>
+                                  )}
+                                  {lineStatus.status === 'not_received' && (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-[#111111] text-gray-300 border border-[#333333]">
+                                      Not received
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-3 py-3 text-sm text-gray-100 text-right">
+                                  {line.quantity}
+                                </td>
+                                <td className="px-3 py-3 text-sm text-gray-100 text-right">
+                                  {formatCurrency(line.unitCostExVAT, po.currency)}
+                                </td>
+                                <td className="px-3 py-3 text-sm font-medium text-gray-100 text-right">
+                                  {formatCurrency(line.lineTotalExVAT, po.currency)}
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>

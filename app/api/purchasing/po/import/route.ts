@@ -4,6 +4,8 @@ import {
   createPurchaseOrder,
   createPOLines,
   type Totals,
+  syncInventoryFromPurchaseOrder,
+  createOrUpdateInvoiceForPurchaseOrder,
 } from '@/lib/db';
 
 // Force Node.js runtime to support pdf-parse
@@ -224,6 +226,15 @@ export async function POST(request: NextRequest) {
         paymentTerms: extractedData.purchaseOrder.paymentTerms,
       });
 
+      // Create or update invoice record linked to this purchase order
+      const invoice = await createOrUpdateInvoiceForPurchaseOrder({
+        purchaseOrderId,
+        supplierId,
+        invoiceNumber: extractedData.purchaseOrder.invoiceNumber || null,
+        invoiceDate: extractedData.purchaseOrder.invoiceDate || null,
+        currency: 'GBP',
+      });
+
       // Create PO lines
       const poLines = await createPOLines(
         extractedData.poLines.map((line) => ({
@@ -235,6 +246,13 @@ export async function POST(request: NextRequest) {
           lineTotalExVAT: line.lineTotalExVAT,
         }))
       );
+
+      // Mark all extracted items as in transit for inventory management
+      const inventorySync = await syncInventoryFromPurchaseOrder({
+        supplierId,
+        purchaseOrderId,
+        poLines,
+      });
 
       // 8. Return success response with all data
       return NextResponse.json({
@@ -251,6 +269,8 @@ export async function POST(request: NextRequest) {
           totals: extractedData.totals,
           savedLines: poLines.length,
           originalCurrency: extractedData.purchaseOrder.originalCurrency,
+          inventorySync,
+          invoice,
         },
       });
     } catch (error) {

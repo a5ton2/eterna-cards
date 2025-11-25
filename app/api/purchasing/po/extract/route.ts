@@ -84,9 +84,9 @@ Extract the following information from the invoice/delivery note image(s) and re
   }
 }
 
-**CURRENCY CONVERSION - CRITICAL - READ CAREFULLY:**
+**CURRENCY HANDLING - CRITICAL - READ CAREFULLY:**
 
-Exchange rates to convert TO GBP: ${ratesList}
+Exchange rates the SERVER will use to convert TO GBP (for your reference ONLY, do not apply them yourself): ${ratesList}
 
 **CURRENCY DETECTION:**
 - Look for currency symbols: £ (GBP), $ (USD), € (EUR), ¥ (JPY/CNY), etc.
@@ -101,13 +101,10 @@ Exchange rates to convert TO GBP: ${ratesList}
   * Chinese text/supplier = CNY
 - Store the ORIGINAL currency in "originalCurrency" field (e.g., "JPY", "USD", "EUR")
 
-**CONVERSION TO GBP (MANDATORY):**
-- **ALL monetary values MUST be converted to GBP** using the rates above
-- To convert: ORIGINAL_AMOUNT × RATE = GBP_AMOUNT
-- Example: 100 USD × 0.7900 = 79.00 GBP
-- Example: 10000 JPY × 0.0049 = 49.00 GBP
-- **NEVER output prices in USD, EUR, JPY, or any currency other than GBP**
-- The "originalCurrency" field preserves what currency the invoice was in
+**NO CURRENCY CONVERSION BY YOU:**
+- Do NOT convert any numbers to GBP.
+- Always output all monetary values (unit costs, line totals, subtotal, extras, VAT, total) in the ORIGINAL invoice currency.
+- The server will use the originalCurrency and the exchange rates above to convert everything to GBP.
 
 **SKU/Item Code Extraction (VERY IMPORTANT):**
 - Look for product codes in a dedicated column or field, often labeled: "SKU", "Item #", "Code", "Product Code", "Item Code", "Part #", "Ref", "Article No"
@@ -157,6 +154,70 @@ interface ExtractedData {
     vat: number;
     total: number;
   };
+}
+
+function convertToGBP(extractedData: ExtractedData, exchangeRates: { [key: string]: number }) {
+  const originalCurrencyRaw = extractedData.purchaseOrder?.originalCurrency;
+  if (!originalCurrencyRaw) {
+    return;
+  }
+
+  const originalCurrency = originalCurrencyRaw.trim().toUpperCase();
+  const rate = exchangeRates[originalCurrency];
+
+  if (!rate || originalCurrency === 'GBP') {
+    return;
+  }
+
+  const convert = (value: unknown): number => {
+    const num = typeof value === 'number' ? value : parseFloat(String(value));
+    if (isNaN(num)) return 0;
+    return Number((num * rate).toFixed(2));
+  };
+
+  extractedData.poLines = extractedData.poLines.map((line) => {
+    const quantity = typeof line.quantity === 'number'
+      ? line.quantity
+      : parseFloat(String(line.quantity)) || 0;
+
+    const convertedUnit = convert(line.unitCostExVAT);
+    const convertedLine = convert(line.lineTotalExVAT);
+
+    let unitCostExVAT = convertedUnit;
+    let lineTotalExVAT = convertedLine;
+
+    if (quantity > 0) {
+      if (convertedLine > 0) {
+        // Prefer the line total as source of truth when present
+        lineTotalExVAT = convertedLine;
+        unitCostExVAT = Number((convertedLine / quantity).toFixed(2));
+      } else if (convertedUnit > 0) {
+        // Fallback: derive line total from unit cost
+        unitCostExVAT = convertedUnit;
+        lineTotalExVAT = Number((convertedUnit * quantity).toFixed(2));
+      } else {
+        unitCostExVAT = 0;
+        lineTotalExVAT = 0;
+      }
+    }
+
+    return {
+      ...line,
+      quantity,
+      unitCostExVAT,
+      lineTotalExVAT,
+    };
+  });
+
+  if (extractedData.totals) {
+    const { subtotal, extras, vat, total } = extractedData.totals;
+    extractedData.totals = {
+      subtotal: convert(subtotal),
+      extras: convert(extras),
+      vat: convert(vat),
+      total: convert(total),
+    };
+  }
 }
 
 // POST endpoint to extract data from invoice (without saving)
@@ -296,7 +357,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 6. Return extracted data WITHOUT saving to database
+    // 6. Convert all monetary values from original currency to GBP using live exchange rates
+    convertToGBP(extractedData, exchangeRates);
+
+    // 7. Return extracted data WITHOUT saving to database
     // Note: We allow incomplete data - user can fill in missing fields in the UI
     return NextResponse.json({
       success: true,
