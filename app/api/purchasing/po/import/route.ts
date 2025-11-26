@@ -8,9 +8,6 @@ import {
   createOrUpdateInvoiceForPurchaseOrder,
 } from '@/lib/db';
 
-// Force Node.js runtime to support pdf-parse
-export const runtime = 'nodejs';
-
 // Gemini prompt for structured data extraction
 const EXTRACTION_PROMPT = `You are running inside the Google Gemini API.
 Input: an invoice (PDF text). Output: a single valid JSON object in this schema:

@@ -1,17 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb, Task } from '@/lib/db';
-
-// Force Node.js runtime for lowdb
-export const runtime = 'nodejs';
+import { supabase } from '@/lib/supabaseClient';
 
 export async function GET() {
   try {
-    const db = await getDb();
-    await db.read();
+    const { data: tasks, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-    const tasks = Array.isArray(db.data.tasks) ? db.data.tasks : [];
+    if (error) {
+      console.error('Get tasks error:', error);
+      return NextResponse.json(
+        { error: 'Failed to load tasks' },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json({ success: true, data: tasks });
+    return NextResponse.json({ success: true, data: tasks || [] });
   } catch (error) {
     console.error('Get tasks error:', error);
     return NextResponse.json(
@@ -23,9 +28,6 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const db = await getDb();
-    await db.read();
-
     const body = await request.json();
     const title = (body?.title as string | undefined)?.trim();
 
@@ -36,21 +38,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!Array.isArray(db.data.tasks)) {
-      db.data.tasks = [];
-    }
-
     const now = new Date().toISOString();
-    const task: Task = {
-      id: crypto.randomUUID(),
-      title,
-      completed: false,
-      createdAt: now,
-      completedAt: null,
-    };
+    const { data: task, error } = await supabase
+      .from('tasks')
+      .insert({
+        title,
+        completed: false,
+        created_at: now,
+        completed_at: null,
+      })
+      .select()
+      .single();
 
-    db.data.tasks.push(task);
-    await db.write();
+    if (error || !task) {
+      console.error('Create task error:', error);
+      return NextResponse.json(
+        { error: 'Failed to create task' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true, data: task });
   } catch (error) {

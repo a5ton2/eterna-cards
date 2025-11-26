@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb, deleteSupplier } from '@/lib/db';
-
-// Force Node.js runtime for lowdb
-export const runtime = 'nodejs';
+import { deleteSupplier } from '@/lib/db';
+import { supabase } from '@/lib/supabaseClient';
 
 // DELETE endpoint to remove a supplier and all associated data
 export async function DELETE(request: NextRequest) {
@@ -18,13 +16,14 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Get the database instance to check if supplier exists
-    const db = await getDb();
-    await db.read();
-
     // Check if supplier exists
-    const supplier = db.data.suppliers.find(s => s.id === supplierId);
-    if (!supplier) {
+    const { data: supplier, error: fetchError } = await supabase
+      .from('suppliers')
+      .select('*')
+      .eq('id', supplierId)
+      .single();
+
+    if (fetchError || !supplier) {
       return NextResponse.json(
         { error: 'Supplier not found' },
         { status: 404 }

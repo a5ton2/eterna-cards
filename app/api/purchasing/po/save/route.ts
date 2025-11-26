@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { findOrCreateSupplier, createPurchaseOrder, createPOLines, syncInventoryFromPurchaseOrder, createOrUpdateInvoiceForPurchaseOrder } from '@/lib/db';
 
-// Force Node.js runtime for lowdb
-export const runtime = 'nodejs';
-
 interface SavePORequest {
   supplier: {
     name: string;

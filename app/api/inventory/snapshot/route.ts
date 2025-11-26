@@ -1,17 +1,17 @@
 import { NextResponse } from 'next/server';
-import { getDb, getInventorySnapshot } from '@/lib/db';
-
-// Force Node.js runtime for lowdb
-export const runtime = 'nodejs';
+import { getInventorySnapshot } from '@/lib/db';
+import { supabase } from '@/lib/supabaseClient';
 
 export async function GET() {
   try {
-    const db = await getDb();
-    await db.read();
-
     const snapshot = await getInventorySnapshot();
 
-    const suppliersById = new Map(db.data.suppliers.map((s) => [s.id, s]));
+    // Get suppliers for enrichment
+    const { data: suppliers } = await supabase
+      .from('suppliers')
+      .select('*');
+    
+    const suppliersById = new Map(suppliers?.map((s) => [s.id, s]) || []);
 
     const enriched = snapshot.map((item) => ({
       product: item.product,

@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
-
-// Force Node.js runtime for lowdb
-export const runtime = 'nodejs';
+import { supabase } from '@/lib/supabaseClient';
 
 // DELETE endpoint to remove a purchase order and its line items
 export async function DELETE(request: NextRequest) {
@@ -18,35 +15,45 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Get the database instance
-    const db = await getDb();
-    await db.read();
-
     // Check if PO exists
-    const poIndex = db.data.purchaseOrders.findIndex(po => po.id === poId);
-    if (poIndex === -1) {
+    const { data: po, error: fetchError } = await supabase
+      .from('purchaseorders')
+      .select('*')
+      .eq('id', poId)
+      .single();
+
+    if (fetchError || !po) {
       return NextResponse.json(
         { error: 'Purchase order not found' },
         { status: 404 }
       );
     }
 
-    // Remove the purchase order
-    const deletedPO = db.data.purchaseOrders.splice(poIndex, 1)[0];
+    // Get count of associated line items before deletion
+    const { count: deletedLines } = await supabase
+      .from('polines')
+      .select('*', { count: 'exact', head: true })
+      .eq('purchaseorderid', poId);
 
-    // Remove all associated line items
-    const deletedLines = db.data.poLines.filter(line => line.purchaseOrderId === poId);
-    db.data.poLines = db.data.poLines.filter(line => line.purchaseOrderId !== poId);
+    // Delete the purchase order (cascade will handle line items)
+    const { error: deleteError } = await supabase
+      .from('purchaseorders')
+      .delete()
+      .eq('id', poId);
 
-    // Save changes
-    await db.write();
+    if (deleteError) {
+      return NextResponse.json(
+        { error: 'Failed to delete purchase order' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       message: 'Purchase order deleted successfully',
       deleted: {
-        purchaseOrder: deletedPO,
-        lineItemsCount: deletedLines.length,
+        purchaseOrder: po,
+        lineItemsCount: deletedLines || 0,
       },
     });
   } catch (error) {

@@ -84,7 +84,9 @@ export default function CreatePOPage() {
           const updated = { ...item, [field]: value };
           // Auto-calculate line total
           if (field === 'quantity' || field === 'unitCostExVAT') {
-            updated.lineTotalExVAT = updated.quantity * updated.unitCostExVAT;
+            const quantity = parseFloat(String(updated.quantity)) || 0;
+            const unitCost = parseFloat(String(updated.unitCostExVAT)) || 0;
+            updated.lineTotalExVAT = quantity * unitCost;
           }
           return updated;
         }
@@ -190,7 +192,7 @@ export default function CreatePOPage() {
     }
   };
 
-  const totalAmount = lineItems.reduce((sum, item) => sum + item.lineTotalExVAT, 0);
+  const totalAmount = lineItems.reduce((sum, item) => sum + (parseFloat(item.lineTotalExVAT) || 0), 0);
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] py-12 px-4 sm:px-6 lg:px-8">

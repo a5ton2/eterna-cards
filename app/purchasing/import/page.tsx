@@ -392,47 +392,77 @@ export default function ImportPage() {
 
       // Check for duplicates
       try {
-        const duplicateResponse = await fetch('/api/purchasing/po/check-duplicates', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            supplierName: data.data.supplier.name,
-            invoiceNumber: data.data.purchaseOrder.invoiceNumber,
-            invoiceDate: data.data.purchaseOrder.invoiceDate,
-            poLines: data.data.poLines,
-          }),
-        });
+        // Skip duplicate check if supplier name is not available
+        if (!data.data.supplier?.name || data.data.supplier.name.trim() === '') {
+          console.log('Skipping duplicate check: no supplier name found');
+          setGroupResults(prev =>
+            prev.map((result) =>
+              result.group.id === group.id
+                ? { ...result, duplicatesChecked: true, duplicates: [] }
+                : result
+            )
+          );
+        } else {
+          const duplicateResponse = await fetch('/api/purchasing/po/check-duplicates', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              supplierName: data.data.supplier.name,
+              invoiceNumber: data.data.purchaseOrder.invoiceNumber,
+              invoiceDate: data.data.purchaseOrder.invoiceDate,
+              poLines: data.data.poLines,
+            }),
+          });
 
-        if (duplicateResponse.ok) {
-          const duplicateData = await duplicateResponse.json();
-          if (duplicateData.hasDuplicates) {
+          if (duplicateResponse.ok) {
+            const duplicateData = await duplicateResponse.json();
+            if (duplicateData.hasDuplicates) {
+              setGroupResults(prev =>
+                prev.map((result) =>
+                  result.group.id === group.id
+                    ? {
+                        ...result,
+                        duplicates: duplicateData.duplicates,
+                        duplicatesChecked: true,
+                      }
+                    : result
+                )
+              );
+            } else {
+              setGroupResults(prev =>
+                prev.map((result) =>
+                  result.group.id === group.id
+                    ? { ...result, duplicatesChecked: true, duplicates: [] }
+                    : result
+                )
+              );
+            }
+          } else {
+            const errorData = await duplicateResponse.json();
+            console.error('Failed to check duplicates:', errorData.error);
+            // Continue without duplicate check
             setGroupResults(prev =>
               prev.map((result) =>
                 result.group.id === group.id
-                  ? {
-                      ...result,
-                      duplicates: duplicateData.duplicates,
-                      duplicatesChecked: true,
-                    }
+                  ? { ...result, duplicatesChecked: true, duplicates: [] }
                   : result
-              )
-            );
-          } else {
-            setGroupResults(prev =>
-              prev.map((result) =>
-                result.group.id === group.id ? { ...result, duplicatesChecked: true } : result
               )
             );
           }
         }
-      } catch (duplicateError) {
-        console.error('Error checking duplicates:', duplicateError);
-        // Continue without duplicate checking
+      } catch (err) {
+        // Update with error
         setGroupResults(prev =>
           prev.map((result) =>
-            result.group.id === group.id ? { ...result, duplicatesChecked: true } : result
+            result.group.id === group.id
+              ? {
+                  ...result,
+                  status: 'error' as const,
+                  error: err instanceof Error ? err.message : 'An error occurred',
+                }
+              : result
           )
         );
       }

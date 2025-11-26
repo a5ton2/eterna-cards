@@ -1,8 +1,10 @@
-import { Low } from 'lowdb';
-import { JSONFile } from 'lowdb/node';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
+import { supabase } from './supabaseClient';
+import { testSupabaseConnection } from './test-supabase';
+import { checkTableStructure } from './check-schema';
+
+// Test connection on module load
+testSupabaseConnection();
+checkTableStructure();
 
 // Define the database schema types
 export interface Supplier {
@@ -41,46 +43,42 @@ export interface Totals {
   grandTotal: number | null;
 }
 
-// Database file path (project root)
-const dbPath = path.join(process.cwd(), 'data', 'db.json');
-
-// Ensure the data directory exists under the project root
-function ensureDataDirectory() {
-  const dataDir = path.join(process.cwd(), 'data');
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-}
 
 // Helper function to find or create a supplier
 export async function findOrCreateSupplier(
   supplierData: Omit<Supplier, 'id' | 'createdAt'>
 ): Promise<string> {
-  const database = await getDb();
-
   // Validate that supplier name is not null or empty
   if (!supplierData.name || supplierData.name.trim() === '') {
     throw new Error('Supplier name is required');
   }
 
   // Try to find existing supplier by name (case-insensitive)
-  const existing = database.data.suppliers.find(
-    (s) => s.name?.toLowerCase() === supplierData.name?.toLowerCase()
-  );
+  const { data: existing } = await supabase
+    .from('suppliers')
+    .select('id')
+    .ilike('name', supplierData.name)
+    .single();
 
   if (existing) {
     return existing.id;
   }
 
   // Create new supplier
-  const newSupplier: Supplier = {
-    id: crypto.randomUUID(),
-    ...supplierData,
-    createdAt: new Date().toISOString(),
-  };
+  const { data: newSupplier, error } = await supabase
+    .from('suppliers')
+    .insert({
+      name: supplierData.name,
+      address: supplierData.address,
+      email: supplierData.email,
+      phone: supplierData.phone,
+    })
+    .select('id')
+    .single();
 
-  database.data.suppliers.push(newSupplier);
-  await database.write();
+  if (error || !newSupplier) {
+    throw new Error(`Failed to create supplier: ${error?.message}`);
+  }
 
   return newSupplier.id;
 }
@@ -89,16 +87,26 @@ export async function findOrCreateSupplier(
 export async function createPurchaseOrder(
   poData: Omit<PurchaseOrder, 'id' | 'createdAt'>
 ): Promise<string> {
-  const database = await getDb();
+  console.log('Creating purchase order with data:', poData);
+  console.log('Supabase URL:', process.env.SUPABASE_URL);
+  console.log('Supabase key exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+  
+  const { data: newPO, error } = await supabase
+    .from('purchaseorders')
+    .insert({
+      supplierid: poData.supplierId,
+      invoicenumber: poData.invoiceNumber,
+      invoicedate: poData.invoiceDate,
+      currency: poData.currency,
+      paymentterms: poData.paymentTerms,
+    })
+    .select('id')
+    .single();
 
-  const newPO: PurchaseOrder = {
-    id: crypto.randomUUID(),
-    ...poData,
-    createdAt: new Date().toISOString(),
-  };
-
-  database.data.purchaseOrders.push(newPO);
-  await database.write();
+  if (error || !newPO) {
+    console.error('Supabase error:', error);
+    throw new Error(`Failed to create purchase order: ${error?.message}`);
+  }
 
   return newPO.id;
 }
@@ -108,38 +116,50 @@ export async function updatePurchaseOrder(
   poId: string,
   updates: Partial<Omit<PurchaseOrder, 'id' | 'createdAt'>>
 ): Promise<PurchaseOrder | null> {
-  const database = await getDb();
+  const mappedUpdates: any = {};
+  if (updates.supplierId !== undefined) mappedUpdates.supplierid = updates.supplierId;
+  if (updates.invoiceNumber !== undefined) mappedUpdates.invoicenumber = updates.invoiceNumber;
+  if (updates.invoiceDate !== undefined) mappedUpdates.invoicedate = updates.invoiceDate;
+  if (updates.currency !== undefined) mappedUpdates.currency = updates.currency;
+  if (updates.paymentTerms !== undefined) mappedUpdates.paymentterms = updates.paymentTerms;
 
-  const poIndex = database.data.purchaseOrders.findIndex(po => po.id === poId);
-  if (poIndex === -1) {
+  const { data, error } = await supabase
+    .from('purchaseorders')
+    .update(mappedUpdates)
+    .eq('id', poId)
+    .select()
+    .single();
+
+  if (error || !data) {
     return null;
   }
 
-  // Update the PO with the provided fields
-  database.data.purchaseOrders[poIndex] = {
-    ...database.data.purchaseOrders[poIndex],
-    ...updates,
-  };
-
-  await database.write();
-  return database.data.purchaseOrders[poIndex];
+  return data;
 }
 
 // Helper function to create PO lines
 export async function createPOLines(
   lines: Omit<POLine, 'id'>[]
 ): Promise<POLine[]> {
-  const database = await getDb();
+  const { data, error } = await supabase
+    .from('polines')
+    .insert(
+      lines.map(line => ({
+        purchaseorderid: line.purchaseOrderId,
+        description: line.description,
+        suppliersku: line.supplierSku,
+        quantity: line.quantity,
+        unitcostexvat: line.unitCostExVAT,
+        linetotalexvat: line.lineTotalExVAT,
+      }))
+    )
+    .select();
 
-  const newLines: POLine[] = lines.map((line) => ({
-    id: crypto.randomUUID(),
-    ...line,
-  }));
+  if (error || !data) {
+    throw new Error(`Failed to create PO lines: ${error?.message}`);
+  }
 
-  database.data.poLines.push(...newLines);
-  await database.write();
-
-  return newLines;
+  return data;
 }
 
 // Helper function to update a line item
@@ -147,34 +167,38 @@ export async function updatePOLine(
   lineId: string,
   updates: Partial<Omit<POLine, 'id' | 'purchaseOrderId'>>
 ): Promise<POLine | null> {
-  const database = await getDb();
+  const mappedUpdates: any = {};
+  if (updates.description !== undefined) mappedUpdates.description = updates.description;
+  if (updates.supplierSku !== undefined) mappedUpdates.suppliersku = updates.supplierSku;
+  if (updates.quantity !== undefined) mappedUpdates.quantity = updates.quantity;
+  if (updates.unitCostExVAT !== undefined) mappedUpdates.unitcostexvat = updates.unitCostExVAT;
+  if (updates.lineTotalExVAT !== undefined) mappedUpdates.linetotalexvat = updates.lineTotalExVAT;
 
-  const lineIndex = database.data.poLines.findIndex(line => line.id === lineId);
-  if (lineIndex === -1) {
+  const { data, error } = await supabase
+    .from('polines')
+    .update(mappedUpdates)
+    .eq('id', lineId)
+    .select()
+    .single();
+
+  if (error || !data) {
     return null;
   }
 
-  // Update the line item with the provided fields
-  database.data.poLines[lineIndex] = {
-    ...database.data.poLines[lineIndex],
-    ...updates,
-  };
-
-  await database.write();
-  return database.data.poLines[lineIndex];
+  return data;
 }
 
 // Helper function to delete a line item
 export async function deletePOLine(lineId: string): Promise<boolean> {
-  const database = await getDb();
+  const { error } = await supabase
+    .from('polines')
+    .delete()
+    .eq('id', lineId);
 
-  const lineIndex = database.data.poLines.findIndex(line => line.id === lineId);
-  if (lineIndex === -1) {
+  if (error) {
     return false;
   }
 
-  database.data.poLines.splice(lineIndex, 1);
-  await database.write();
   return true;
 }
 
@@ -184,37 +208,39 @@ export async function deleteSupplier(supplierId: string): Promise<{
   deletedPurchaseOrders: number;
   deletedLines: number;
 }> {
-  const database = await getDb();
+  // Get count of purchase orders for this supplier
+  const { count: deletedPurchaseOrders } = await supabase
+    .from('purchaseorders')
+    .select('*', { count: 'exact', head: true })
+    .eq('supplierid', supplierId);
 
-  // Find all purchase orders for this supplier
-  const supplierPOs = database.data.purchaseOrders.filter(
-    (po) => po.supplierId === supplierId
-  );
-  const poIds = supplierPOs.map((po) => po.id);
-
-  // Delete all line items for these purchase orders
-  const linesBefore = database.data.poLines.length;
-  database.data.poLines = database.data.poLines.filter(
-    (line) => !poIds.includes(line.purchaseOrderId)
-  );
-  const deletedLines = linesBefore - database.data.poLines.length;
-
-  // Delete all purchase orders for this supplier
-  database.data.purchaseOrders = database.data.purchaseOrders.filter(
-    (po) => po.supplierId !== supplierId
-  );
-
+  // Delete all line items for these purchase orders (cascade will handle this)
+  // Delete all purchase orders for this supplier (cascade will handle this)
   // Delete the supplier
-  database.data.suppliers = database.data.suppliers.filter(
-    (s) => s.id !== supplierId
-  );
+  const { error } = await supabase
+    .from('suppliers')
+    .delete()
+    .eq('id', supplierId);
 
-  await database.write();
+  if (error) {
+    throw new Error(`Failed to delete supplier: ${error.message}`);
+  }
+
+  // Note: With cascade deletes, we don't need to manually delete POs and lines
+  // Count deleted lines by querying poLines before deletion
+  const { count: deletedLines } = await supabase
+    .from('polines')
+    .select('*', { count: 'exact', head: true })
+    .in('purchaseorderid', (await supabase
+      .from('purchaseorders')
+      .select('id')
+      .eq('supplierid', supplierId)
+      .then(({ data }) => data?.map(po => po.id) || [])));
 
   return {
     success: true,
-    deletedPurchaseOrders: supplierPOs.length,
-    deletedLines,
+    deletedPurchaseOrders: deletedPurchaseOrders || 0,
+    deletedLines: deletedLines || 0,
   };
 }
 
@@ -274,40 +300,52 @@ export async function createOrUpdateInvoiceForPurchaseOrder(params: {
   invoiceDate: string | null;
   currency: string;
 }): Promise<Invoice> {
-  const database = await getDb();
-
-  if (!Array.isArray(database.data.invoices)) {
-    database.data.invoices = [];
-  }
-
-  const existing = database.data.invoices.find(
-    (inv) => inv.purchaseOrderId === params.purchaseOrderId
-  );
+  // Try to find existing invoice
+  const { data: existing } = await supabase
+    .from('invoices')
+    .select('*')
+    .eq('purchaseorderid', params.purchaseOrderId)
+    .single();
 
   if (existing) {
-    existing.supplierId = params.supplierId;
-    existing.invoiceNumber = params.invoiceNumber;
-    existing.invoiceDate = params.invoiceDate;
-    existing.currency = params.currency;
-    await database.write();
-    return existing;
+    // Update existing invoice
+    const { data: updated, error } = await supabase
+      .from('invoices')
+      .update({
+        supplierid: params.supplierId,
+        invoicenumber: params.invoiceNumber,
+        invoicedate: params.invoiceDate,
+        currency: params.currency,
+      })
+      .eq('purchaseorderid', params.purchaseOrderId)
+      .select()
+      .single();
+
+    if (error || !updated) {
+      throw new Error(`Failed to update invoice: ${error?.message}`);
+    }
+
+    return updated;
   }
 
-  const now = new Date().toISOString();
-  const invoice: Invoice = {
-    id: crypto.randomUUID(),
-    purchaseOrderId: params.purchaseOrderId,
-    supplierId: params.supplierId,
-    invoiceNumber: params.invoiceNumber,
-    invoiceDate: params.invoiceDate,
-    currency: params.currency,
-    createdAt: now,
-  };
+  // Create new invoice
+  const { data: newInvoice, error } = await supabase
+    .from('invoices')
+    .insert({
+      purchaseorderid: params.purchaseOrderId,
+      supplierid: params.supplierId,
+      invoicenumber: params.invoiceNumber,
+      invoicedate: params.invoiceDate,
+      currency: params.currency,
+    })
+    .select()
+    .single();
 
-  database.data.invoices.push(invoice);
-  await database.write();
+  if (error || !newInvoice) {
+    throw new Error(`Failed to create invoice: ${error?.message}`);
+  }
 
-  return invoice;
+  return newInvoice;
 }
 
 export interface Task {
@@ -336,54 +374,6 @@ export interface DatabaseSchema {
   tasks: Task[];
 }
 
-// Helper to build default empty schema
-function createDefaultDatabase(): DatabaseSchema {
-  return {
-    suppliers: [],
-    purchaseOrders: [],
-    poLines: [],
-    products: [],
-    inventory: [],
-    transit: [],
-    invoices: [],
-    tasks: [],
-  };
-}
-
-// Initialize the database
-let db: Low<DatabaseSchema> | null = null;
-
-export async function getDb(): Promise<Low<DatabaseSchema>> {
-  if (db) return db;
-
-  ensureDataDirectory();
-
-  // Create adapter and database instance
-  const adapter = new JSONFile<DatabaseSchema>(dbPath);
-  db = new Low<DatabaseSchema>(adapter, createDefaultDatabase());
-
-  // Read data from JSON file (or use default if file doesn't exist)
-  await db.read();
-
-  // Initialize with default data if empty, and backfill any missing collections
-  if (!db.data) {
-    db.data = createDefaultDatabase();
-    await db.write();
-  } else {
-    // Backwards compatible: ensure all collections exist
-    if (!Array.isArray(db.data.suppliers)) db.data.suppliers = [];
-    if (!Array.isArray(db.data.purchaseOrders)) db.data.purchaseOrders = [];
-    if (!Array.isArray(db.data.poLines)) db.data.poLines = [];
-    if (!Array.isArray(db.data.products)) db.data.products = [];
-    if (!Array.isArray(db.data.inventory)) db.data.inventory = [];
-    if (!Array.isArray(db.data.transit)) db.data.transit = [];
-    if (!Array.isArray(db.data.invoices)) db.data.invoices = [];
-    if (!Array.isArray(db.data.tasks)) db.data.tasks = [];
-    await db.write();
-  }
-
-  return db;
-}
 
 // Interface for duplicate detection result
 export interface DuplicateMatch {
@@ -401,13 +391,14 @@ export async function findDuplicatePurchaseOrders(
   invoiceDate: string | null,
   poLines: Array<{ description: string; quantity: number; unitCostExVAT: number }>
 ): Promise<DuplicateMatch[]> {
-  const database = await getDb();
   const duplicates: DuplicateMatch[] = [];
 
   // Find supplier by name (case-insensitive)
-  const supplier = database.data.suppliers.find(
-    (s) => s.name?.toLowerCase() === supplierName?.toLowerCase()
-  );
+  const { data: supplier } = await supabase
+    .from('suppliers')
+    .select('*')
+    .ilike('name', supplierName)
+    .single();
 
   if (!supplier) {
     // No supplier found, so no duplicates possible
@@ -415,31 +406,37 @@ export async function findDuplicatePurchaseOrders(
   }
 
   // Get all purchase orders for this supplier
-  const supplierPOs = database.data.purchaseOrders.filter(
-    (po) => po.supplierId === supplier.id
-  );
+  const { data: supplierPOs } = await supabase
+    .from('purchaseorders')
+    .select('*')
+    .eq('supplierid', supplier.id);
+
+  if (!supplierPOs) return [];
 
   for (const po of supplierPOs) {
     const matchReasons: string[] = [];
     let matchScore = 0;
 
     // Check invoice number match (strong indicator)
-    if (invoiceNumber && po.invoiceNumber &&
-        invoiceNumber.toLowerCase() === po.invoiceNumber.toLowerCase()) {
+    if (invoiceNumber && po.invoicenumber &&
+        invoiceNumber.toLowerCase() === po.invoicenumber.toLowerCase()) {
       matchReasons.push('Same invoice number');
       matchScore += 50;
     }
 
     // Check invoice date match
-    if (invoiceDate && po.invoiceDate && invoiceDate === po.invoiceDate) {
+    if (invoiceDate && po.invoicedate && invoiceDate === po.invoicedate) {
       matchReasons.push('Same invoice date');
       matchScore += 20;
     }
 
     // Get line items for this PO
-    const existingLines = database.data.poLines.filter(
-      (line) => line.purchaseOrderId === po.id
-    );
+    const { data: existingLines } = await supabase
+      .from('polines')
+      .select('*')
+      .eq('purchaseorderid', po.id);
+
+    if (!existingLines) continue;
 
     // Check if line items are similar
     if (existingLines.length === poLines.length && poLines.length > 0) {
@@ -519,20 +516,17 @@ export async function syncInventoryFromPurchaseOrder(params: {
   productsMatched: number;
   transitCreated: number;
 }> {
-  const database = await getDb();
-
-  if (!Array.isArray(database.data.products)) {
-    database.data.products = [];
-  }
-  if (!Array.isArray(database.data.transit)) {
-    database.data.transit = [];
-  }
-
   let productsCreated = 0;
   let productsMatched = 0;
   let transitCreated = 0;
 
-  const products = database.data.products;
+  const { data: products } = await supabase
+    .from('products')
+    .select('*');
+
+  if (!products) {
+    throw new Error('Failed to fetch products');
+  }
 
   for (const line of params.poLines) {
     const rawDescription = line.description?.trim();
@@ -551,7 +545,7 @@ export async function syncInventoryFromPurchaseOrder(params: {
           (p) =>
             p.primarySku?.toLowerCase() === skuLower ||
             p.supplierSku?.toLowerCase() === skuLower ||
-            (p.barcodes || []).some((code) => code.toLowerCase() === skuLower)
+            (p.barcodes || []).some((code: string) => code.toLowerCase() === skuLower)
         ) || null;
     }
 
@@ -591,29 +585,43 @@ export async function syncInventoryFromPurchaseOrder(params: {
     if (matchedProduct) {
       productsMatched++;
       // Update aliases/supplier linkage if needed
-      if (!matchedProduct.aliases.includes(rawDescription)) {
-        matchedProduct.aliases.push(rawDescription);
+      const updatedAliases = matchedProduct.aliases || [];
+      if (!updatedAliases.includes(rawDescription)) {
+        updatedAliases.push(rawDescription);
       }
-      if (!matchedProduct.supplierId) {
-        matchedProduct.supplierId = params.supplierId;
+      const { error: updateError } = await supabase
+        .from('products')
+        .update({
+          aliases: updatedAliases,
+          supplierid: matchedProduct.supplierId || params.supplierId,
+          updated_at: now,
+        })
+        .eq('id', matchedProduct.id);
+      if (updateError) {
+        console.error('Failed to update product:', updateError.message || 'Unknown error');
       }
-      matchedProduct.updatedAt = now;
       product = matchedProduct;
     } else {
       // Create new product
-      const newProduct: Product = {
-        id: crypto.randomUUID(),
-        name: rawDescription,
-        primarySku: supplierSku,
-        supplierSku,
-        barcodes: [],
-        aliases: [rawDescription],
-        supplierId: params.supplierId,
-        category: null,
-        tags: [],
-        createdAt: now,
-        updatedAt: now,
-      };
+      const { data: newProduct, error: insertError } = await supabase
+        .from('products')
+        .insert({
+          name: rawDescription,
+          primarysku: supplierSku,
+          suppliersku: supplierSku,
+          barcodes: [],
+          aliases: [rawDescription],
+          supplierid: params.supplierId,
+          category: null,
+          tags: [],
+        })
+        .select()
+        .single();
+
+      if (insertError || !newProduct) {
+        console.error('Failed to create product:', insertError?.message || 'Unknown error');
+        continue;
+      }
       products.push(newProduct);
       productsCreated++;
       product = newProduct;
@@ -629,25 +637,25 @@ export async function syncInventoryFromPurchaseOrder(params: {
       continue;
     }
 
-    const transitRecord: TransitRecord = {
-      id: crypto.randomUUID(),
-      productId: product.id,
-      purchaseOrderId: params.purchaseOrderId,
-      poLineId: line.id,
-      supplierId: params.supplierId,
-      quantity,
-      remainingQuantity: quantity,
-      unitCostGBP: unitCost,
-      status: 'in_transit',
-      createdAt: now,
-      updatedAt: now,
-    };
+    const { error: transitError } = await supabase
+      .from('transit')
+      .insert({
+        productid: product.id,
+        purchaseorderid: params.purchaseOrderId,
+        polineid: line.id,
+        supplierid: params.supplierId,
+        quantity,
+        remainingquantity: quantity,
+        unitcostgbp: unitCost,
+        status: 'in_transit',
+      });
 
-    database.data.transit.push(transitRecord);
+    if (transitError) {
+      console.error('Failed to create transit record:', transitError.message || 'Unknown error');
+      continue;
+    }
     transitCreated++;
   }
-
-  await database.write();
 
   return {
     productsCreated,
@@ -658,17 +666,17 @@ export async function syncInventoryFromPurchaseOrder(params: {
 
 // Get an inventory snapshot (products + on-hand + quantity in transit)
 export async function getInventorySnapshot(): Promise<InventoryItemView[]> {
-  const database = await getDb();
-
-  const products = database.data.products || [];
-  const inventory = database.data.inventory || [];
-  const transit = database.data.transit || [];
+  const [products, inventory, transit] = await Promise.all([
+    supabase.from('products').select('*').then(({ data }) => data || []),
+    supabase.from('inventory').select('*').then(({ data }) => data || []),
+    supabase.from('transit').select('*').then(({ data }) => data || []),
+  ]);
 
   const items: InventoryItemView[] = products.map((product) => {
-    const inv = inventory.find((i) => i.productId === product.id) || null;
+    const inv = inventory.find((i) => i.productid === product.id) || null;
     const quantityInTransit = transit
-      .filter((t) => t.productId === product.id && t.remainingQuantity > 0)
-      .reduce((sum, t) => sum + t.remainingQuantity, 0);
+      .filter((t) => t.productid === product.id && t.remainingquantity > 0)
+      .reduce((sum, t) => sum + t.remainingquantity, 0);
 
     return {
       product,
@@ -704,36 +712,54 @@ export async function receiveStockForProduct(params: {
     throw new Error('Quantity must be a positive number');
   }
 
-  const database = await getDb();
+  const { data: product } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', productId)
+    .single();
 
-  const product = database.data.products.find((p) => p.id === productId);
   if (!product) {
     throw new Error('Product not found');
   }
 
   const now = new Date().toISOString();
 
-  if (!Array.isArray(database.data.inventory)) {
-    database.data.inventory = [];
+  // Get or create inventory record
+  let inventoryRecord: InventoryRecord | null = null;
+  const { data: existingInventory } = await supabase
+    .from('inventory')
+    .select('*')
+    .eq('productid', productId)
+    .single();
+
+  if (existingInventory) {
+    inventoryRecord = existingInventory;
+  } else {
+    const { data: newInventory, error: insertError } = await supabase
+      .from('inventory')
+      .insert({
+        productid: productId,
+        quantityonhand: 0,
+        averagecostgbp: 0,
+      })
+      .select()
+      .single();
+
+    if (insertError || !newInventory) {
+      throw new Error(`Failed to create inventory record: ${insertError?.message}`);
+    }
+    inventoryRecord = newInventory;
   }
 
-  let inventoryRecord = database.data.inventory.find((inv) => inv.productId === productId) || null;
-  if (!inventoryRecord) {
-    inventoryRecord = {
-      id: crypto.randomUUID(),
-      productId,
-      quantityOnHand: 0,
-      averageCostGBP: 0,
-      lastUpdated: now,
-    };
-    database.data.inventory.push(inventoryRecord);
-  }
+  // Get transit records sorted by creation date
+  const { data: transitRecords } = await supabase
+    .from('transit')
+    .select('*')
+    .eq('productid', productId)
+    .gt('remainingQuantity', 0)
+    .order('createdAt', { ascending: true });
 
-  const transitRecords = (database.data.transit || [])
-    .filter((t) => t.productId === productId && t.remainingQuantity > 0)
-    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-
-  if (transitRecords.length === 0) {
+  if (!transitRecords || transitRecords.length === 0) {
     throw new Error('No in-transit quantity available for this product');
   }
 
@@ -753,16 +779,28 @@ export async function receiveStockForProduct(params: {
 
     incomingTotalValue += take * unitCost;
     receivedQuantity += take;
-    t.remainingQuantity = available - take;
-    t.status = t.remainingQuantity > 0 ? 'partially_received' : 'received';
-    t.updatedAt = now;
-    affectedTransitIds.push(t.id);
+    const newRemaining = available - take;
+    const newStatus = newRemaining > 0 ? 'partially_received' : 'received';
 
+    await supabase
+      .from('transit')
+      .update({
+        remainingQuantity: newRemaining,
+        status: newStatus,
+        updatedAt: now,
+      })
+      .eq('id', t.id);
+
+    affectedTransitIds.push(t.id);
     remainingToReceive -= take;
   }
 
   if (receivedQuantity <= 0) {
     throw new Error('Unable to receive stock: no available in-transit quantity for this product');
+  }
+
+  if (!inventoryRecord) {
+    throw new Error('Failed to get inventory record');
   }
 
   const currentOnHand = inventoryRecord.quantityOnHand;
@@ -774,11 +812,14 @@ export async function receiveStockForProduct(params: {
     ? Number(((currentValue + incomingTotalValue) / newOnHand).toFixed(4))
     : 0;
 
-  inventoryRecord.quantityOnHand = newOnHand;
-  inventoryRecord.averageCostGBP = newAvg;
-  inventoryRecord.lastUpdated = now;
-
-  await database.write();
+  await supabase
+    .from('inventory')
+    .update({
+      quantityonhand: newOnHand,
+      averagecostgbp: newAvg,
+      lastupdated: now,
+    })
+    .eq('id', inventoryRecord!.id);
 
   return {
     productId,
@@ -806,21 +847,34 @@ export async function addBarcodeToProduct(
     throw new Error('Barcode is too long');
   }
 
-  const database = await getDb();
+  // Get current product
+  const { data: product } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', productId)
+    .single();
 
-  const product = database.data.products.find((p) => p.id === productId);
   if (!product) {
     throw new Error('Product not found');
   }
 
-  if (!Array.isArray(product.barcodes)) {
-    product.barcodes = [];
-  }
+  const currentBarcodes = product.barcodes || [];
+  if (!currentBarcodes.includes(trimmed)) {
+    const { data: updated, error } = await supabase
+      .from('products')
+      .update({
+        barcodes: [...currentBarcodes, trimmed],
+        updatedAt: new Date().toISOString(),
+      })
+      .eq('id', productId)
+      .select()
+      .single();
 
-  if (!product.barcodes.includes(trimmed)) {
-    product.barcodes.push(trimmed);
-    product.updatedAt = new Date().toISOString();
-    await database.write();
+    if (error || !updated) {
+      throw new Error(`Failed to add barcode: ${error?.message}`);
+    }
+
+    return updated;
   }
 
   return product;

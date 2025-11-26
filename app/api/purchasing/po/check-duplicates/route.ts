@@ -4,17 +4,21 @@ import { findDuplicatePurchaseOrders } from '@/lib/db';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log('Received check-duplicates request:', body);
+    
     const { supplierName, invoiceNumber, invoiceDate, poLines } = body;
 
     // Validate required fields
-    if (!supplierName) {
+    if (!supplierName || typeof supplierName !== 'string' || supplierName.trim() === '') {
+      console.error('Missing or invalid supplierName:', supplierName);
       return NextResponse.json(
-        { error: 'Supplier name is required' },
+        { error: 'Supplier name is required and must be a non-empty string' },
         { status: 400 }
       );
     }
 
     if (!poLines || !Array.isArray(poLines) || poLines.length === 0) {
+      console.error('Invalid poLines:', poLines);
       return NextResponse.json(
         { error: 'At least one line item is required' },
         { status: 400 }
